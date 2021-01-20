@@ -4,16 +4,16 @@ If you have an iOS app built with Swift, here's a tutorial on how to add Ramp to
 
 Remember to check out our full documentation at [https://docs.ramp.network/](https://docs.ramp.network/).
 
-## What we need to do
-- compose URL for Ramp widget with parameters of your choice
-- create Safari view controller and load composed URL
-- handle URL callback to complete the purchase
+## What do we need to do?
+- compose a URL for the Ramp widget with parameters of your choice
+- create a Safari view controller and load the composed URL
+- handle a callback URL to complete the purchase
 
 ## In detail
 
 ### Composing the widget URL
 
-Our Ramp widget allows you to provide some parameters before displaying it, so the user doesn't have to type or copy-paste information. You can set such options as wallet address, cryptocurrency and crypto amount, etc. In order to do so, we need to create a URL with proper query items as showcased in the snippet below. You can find the description of all available parameters in our [documentation](https://docs.ramp.network/configuration/).
+The Ramp widget allows you to provide some parameters before displaying it, so the user doesn't have to type or copy-paste information. You can set options such as wallet address, cryptocurrency and crypto amount, etc. In order to do so, we need to create a URL with proper query items as showcased in the snippet below. You can find the description of all available parameters in our [documentation](https://docs.ramp.network/configuration/).
 
 ```swift
 struct Configuration {
@@ -27,7 +27,6 @@ struct Configuration {
     var userEmailAddress: String? = nil
     var url: String
     var finalUrl: String? = nil
-    var variant: String? = nil
     var hostApiKey: String? = nil
 
     func composeUrl() -> URL {
@@ -42,7 +41,6 @@ struct Configuration {
         urlComponents.appendQueryItem(name: "hostAppName", value: hostAppName)
         urlComponents.appendQueryItem(name: "userEmailAddress", value: userEmailAddress)
         urlComponents.appendQueryItem(name: "finalUrl", value: finalUrl)
-        urlComponents.appendQueryItem(name: "variant", value: variant)
         urlComponents.appendQueryItem(name: "hostApiKey", value: hostApiKey)
 
         return urlComponents.url!
@@ -71,7 +69,7 @@ import SafariServices
 class ViewController: UIViewController {
 
     func showRampInstantWidget() {
-        var configuration = Configuration(url: "https://ri-widget-dev.firebaseapp.com/")
+        var configuration = Configuration(url: "https://buy.ramp.network")
         configuration.fiatCurrency = "EUR"
         configuration.fiatValue = "2"
         configuration.swapAsset = "BTC"
@@ -85,9 +83,9 @@ class ViewController: UIViewController {
 }
 ```
 
-### Handling a URL callback
+### Handling a callback URL
 
-One of the query items you can pass to Ramp widget URL is `finalUrl`. If you do this, Ramp will redirect your users to this URL after the purchase is completed. You can use this mechanism for your app to detect purchase completion and perform some actions like dismissing the Safari view controller and notifying your user.
+One of the query items you can pass to the Ramp widget URL is `finalUrl`. If you do this, Ramp will redirect your users to this URL after the purchase is completed. You can use this mechanism to redirect the user back to your app, to detect purchase completion and perform some actions like dismissing the Safari view controller and notifying your user.
 
 #### Step 1 - Define a redirection URL
 
@@ -97,7 +95,7 @@ Having these two, you can now define a value for the `finalUrl` parameter - it w
 
 #### Step 2 - Register URL scheme
 
-Now, add a URL scheme to your app. You can do it using the `Info` tab for a specific target in Xcode or by manually editing the *Info.plist* file. If iOS ever tries to open an URL with your scheme, it will pass the URL to your app to handle it. You can find more details on how to add custom URL scheme in [Apple documentation](https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content/defining_a_custom_url_scheme_for_your_app).
+Now, add a URL scheme to your app. You can do it using the `Info` tab for a specific target in Xcode or by manually editing the `Info.plist` file. If iOS ever tries to open an URL with your scheme, it will pass the URL to your app to handle it. You can find more details on how to add a custom URL scheme in [Apple documentation](https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content/defining_a_custom_url_scheme_for_your_app).
 
 ```xml
 <key>CFBundleURLTypes</key>
@@ -107,7 +105,7 @@ Now, add a URL scheme to your app. You can do it using the `Info` tab for a spec
         <string>Editor</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>myawesomeapp</string> <!--Put your app scheme here-->
+            <string>rampexample</string> <!--Put your app scheme here-->
         </array>
     </dict>
 </array>
