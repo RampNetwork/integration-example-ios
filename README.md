@@ -121,4 +121,39 @@ These methods will be called when the system detects that a user tried to open a
 
 That's where our Safari view controller and setting the `finalUrl` parameter comes into play. After the purchase is completed and user taps the confirmation button, Safari VC will try to open the URL. Since it fits our registered scheme, the methods described above will be triggered. Now you can dismiss your Safari view controller, notify the user and perform any task you want.
 
+You can implement the methods above however you like, but what should suit most use cases, is to send a notification.
+
+```swift
+let rampUrlScheme = "rampexample"
+let rampNotificationName = Notification.Name(rawValue: "ramp.callback.notification")
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    ...
+
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if
+            let urlContext = URLContexts.first,
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+            let scheme = components.scheme,
+            scheme == rampUrlScheme
+        {
+            let notification = Notification(name: rampNotificationName, object: url, userInfo: nil)
+            NotificationCenter.default.post(notification)
+        }
+    }
+}
+```
+
+Then, you can listen for the notification anywhere in the code, and act accordingly.
+
+```swift
+NotificationCenter.default.addObserver(
+    forName: rampNotificationName, object: nil, queue: .main) { (notification) in
+    if let rampCallbackUrl = notification.object as? URL {
+        // do whatever you want
+    }
+}
+``
+
 That's it - your app can now use Ramp to allow your users to buy crypto easily.
