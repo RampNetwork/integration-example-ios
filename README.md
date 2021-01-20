@@ -1,6 +1,6 @@
 # Ramp iOS integration tutorial
 
-If you have an iOS app built with Swift, here's a tutorial on how to add Ramp to it in just a few steps.
+If you have an iOS app built with Swift, here's a sample repository showing how to add Ramp to it in just a few steps.
 
 Remember to check out our full documentation at [https://docs.ramp.network/](https://docs.ramp.network/).
 
